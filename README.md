@@ -46,7 +46,7 @@ Also, you can use the singleton instance. Use singleton if you do not have
 control over how classes, such as controllers, are created.
 
 ```ruby
-dependency_manager = Nurse.instance
+dependency_manager = Nurse.dependency_manager
 ```
 
 ### Fetching dependencies
