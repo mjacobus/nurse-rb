@@ -37,7 +37,7 @@ dependency_manager.define(:connection) do |dependency_manager|
 end
 
 dependency_manager.define(UserRepository) do |dependency_manager|
-  conneciton = dependency_manager.get(:connection)
+  connection = dependency_manager.get(:connection)
   UserRepository.new(connection)
 end
 ```
