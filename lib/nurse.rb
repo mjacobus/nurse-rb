@@ -1,5 +1,8 @@
 require "nurse/version"
+require "nurse/dependency_container"
 
 module Nurse
-  # Your code goes here...
+  def self.dependency_manager
+    @@dependency_manager ||= DependencyContainer.new
+  end
 end
