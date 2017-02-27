@@ -15,7 +15,7 @@ module Nurse
     end
 
     def defined?(dependency)
-      definitions.has_key?(to_key(dependency))
+      definitions.key?(to_key(dependency))
     end
 
     def get(dependency)
@@ -23,9 +23,7 @@ module Nurse
 
       key = to_key(dependency)
 
-      unless instances.has_key?(key)
-        instances[key] = definitions[key].call(self)
-      end
+      instances[key] = definitions[key].call(self) unless instances.key?(key)
 
       instances[key]
     end
@@ -33,14 +31,14 @@ module Nurse
     def fetch(dependency, &block)
       return get(dependency) if self.defined?(dependency)
       return block.call(dependency) if block_given?
-      raise UndefinedDependency, "'#{dependency}' was not defined"
+      fail UndefinedDependency, "'#{dependency}' was not defined"
     end
 
     private
 
     def ensure_undefined(dependency)
       if self.defined?(to_key(dependency))
-        raise DependencyAlreadyDefined.new(
+        fail DependencyAlreadyDefined.new(
           "Dependency '#{dependency}' was already defined"
         )
       end

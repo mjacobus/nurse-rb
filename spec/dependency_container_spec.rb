@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Nurse::DependencyContainer do
   let(:container) do
@@ -13,8 +13,8 @@ describe Nurse::DependencyContainer do
     end
   end
 
-  describe "#share" do
-    it "defines a shared dependency" do
+  describe '#share' do
+    it 'defines a shared dependency' do
       container.share(:foo) do
         :bar
       end
@@ -22,19 +22,19 @@ describe Nurse::DependencyContainer do
       container.get(:foo).must_equal :bar
     end
 
-    it "passess the container as argument for the block" do
+    it 'passess the container as argument for the block' do
       container.share(:hash) do |di|
         { name: di.get(:name) }
       end
 
       container.share :name do
-        "marcelo"
+        'marcelo'
       end
 
-      container.get(:hash)[:name].must_equal("marcelo")
+      container.get(:hash)[:name].must_equal('marcelo')
     end
 
-    it "throws an exception if dependency was already defined" do
+    it 'throws an exception if dependency was already defined' do
       begin
         container.share(Hash)
         fail
@@ -44,8 +44,8 @@ describe Nurse::DependencyContainer do
     end
   end
 
-  describe "#share!" do
-    it "overrites definition" do
+  describe '#share!' do
+    it 'overrites definition' do
       container.share!(:dependency) { :bar }
       container.get(:dependency).must_equal :bar
 
@@ -58,62 +58,62 @@ describe Nurse::DependencyContainer do
     end
   end
 
-  describe "#defined?" do
-    it "returns false when dependency was not defined" do
+  describe '#defined?' do
+    it 'returns false when dependency was not defined' do
       container.defined?(:foo).must_equal false
     end
 
-    it "returns true when dependency was defined" do
+    it 'returns true when dependency was defined' do
       container.defined?(Hash).must_equal true
     end
 
-    it "handles classes as dependencies keys" do
+    it 'handles classes as dependencies keys' do
       container.defined?(Hash).must_equal true
     end
 
-    it "handles symbols as dependencies keys" do
+    it 'handles symbols as dependencies keys' do
       container.defined?(:definition).must_equal true
     end
 
-    it "handles strings as dependencies keys" do
-      container.defined?("definition").must_equal true
+    it 'handles strings as dependencies keys' do
+      container.defined?('definition').must_equal true
     end
   end
 
-  describe "#get" do
-    it "return nil when no dependency was defined" do
+  describe '#get' do
+    it 'return nil when no dependency was defined' do
       container.get(:undefined).must_be_nil
     end
 
-    it "returns a unique instance of the dependency when it was defined" do
+    it 'returns a unique instance of the dependency when it was defined' do
       dependency = container.get(Hash)
       dependency.must_be_instance_of(Hash)
       container.get(Hash).must_be_same_as(dependency)
     end
   end
 
-  describe "#fetch" do
-    it "returns a unique instance of the dependency when it was defined" do
+  describe '#fetch' do
+    it 'returns a unique instance of the dependency when it was defined' do
       dependency = container.fetch(Hash)
       dependency.must_be_instance_of(Hash)
       container.fetch(Hash).must_be_same_as(dependency)
     end
 
-    it "throws an exception when dependency is not defined" do
+    it 'throws an exception when dependency is not defined' do
       begin
-        container.fetch("undefined")
+        container.fetch('undefined')
         fail
       rescue Nurse::DependencyContainer::UndefinedDependency => e
         e.message.must_equal "'undefined' was not defined"
       end
     end
 
-    it "allows block as a fall back for the unexisting dependency" do
-      container.fetch("undefined") do |key|
+    it 'allows block as a fall back for the unexisting dependency' do
+      container.fetch('undefined') do |key|
         "#{key} undefined"
-      end.must_equal "undefined undefined"
+      end.must_equal 'undefined undefined'
 
-      container.fetch("undefined") { "undefined" }.must_equal "undefined"
+      container.fetch('undefined') { 'undefined' }.must_equal 'undefined'
     end
   end
 end
