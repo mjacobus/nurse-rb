@@ -8,4 +8,5 @@ rvm:
   - 2.2
   - 2.3.0
   - 2.4.0
+script: rake test:coveralls
 before_install: gem install bundler -v 1.10.6
