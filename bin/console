@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-require "bundler/setup"
-require "nurse"
+require 'bundler/setup'
+require 'nurse'
 
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
@@ -10,5 +10,5 @@ require "nurse"
 # require "pry"
 # Pry.start
 
-require "irb"
+require 'irb'
 IRB.start

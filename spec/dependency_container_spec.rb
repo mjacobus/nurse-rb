@@ -1,119 +1,78 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Nurse::DependencyContainer do
+  let(:shared) { Hash.new }
+  let(:new_hash) { Hash.new(foo: :bar) }
+
   let(:container) do
     container = Nurse::DependencyContainer.new
+    container.share(Hash) { Hash.new }
+    container.share(:definition) { :defined_object }
+    container.share(:shared) { shared }
+    container.set(:new_hash) { new_hash.dup }
+  end
 
-    container.define(Hash) do
-      Hash.new
+  describe '#defined?' do
+    it 'returns false when it was not defined' do
+      container.defined?(:undefined).must_equal(false)
     end
 
-    container.define(:definition) do
-      :defined_object
+    it 'returns true when it was defined with #share' do
+      container.defined?(:shared).must_equal(true)
+      container.defined?('shared').must_equal(true)
+    end
+
+    it 'returns true when it was defined with #set' do
+      container.defined?(:new_hash).must_equal(true)
+      container.defined?('new_hash').must_equal(true)
     end
   end
 
-  describe "#define" do
-    it "defines dependencies" do
-      container.define(:foo) do
-        :bar
-      end
-
-      container.get(:foo).must_equal :bar
-    end
-
-    it "passess the container as argument for the block" do
-      container.define(:hash) do |di|
-        { name: di.get(:name) }
-      end
-
-      container.define :name do
-        "marcelo"
-      end
-
-      container.get(:hash)[:name].must_equal("marcelo")
-    end
-
-    it "throws an exception if dependency was already defined" do
+  describe '#share' do
+    it 'raises error when dependency is already defined' do
       begin
-        container.define(Hash)
+        container.share(:shared)
         fail
       rescue Nurse::DependencyContainer::DependencyAlreadyDefined => e
-        e.message.must_equal "Dependency 'Hash' was already defined"
+        e.message.must_equal "Dependency 'shared' was already defined"
       end
     end
   end
 
-  describe "#define!" do
-    it "overrites definition" do
-      container.define!(:dependency) { :bar }
-      container.get(:dependency).must_equal :bar
-
-      container.define!(:dependency) do
-        # { foo: di.get(:dependency) }
-        :new_dependency
-      end
-
-      container.get(:dependency).must_equal(:new_dependency)
-    end
-  end
-
-  describe "#defined?" do
-    it "returns false when dependency was not defined" do
-      container.defined?(:foo).must_equal false
-    end
-
-    it "returns true when dependency was defined" do
-      container.defined?(Hash).must_equal true
-    end
-
-    it "handles classes as dependencies keys" do
-      container.defined?(Hash).must_equal true
-    end
-
-    it "handles symbols as dependencies keys" do
-      container.defined?(:definition).must_equal true
-    end
-
-    it "handles strings as dependencies keys" do
-      container.defined?("definition").must_equal true
-    end
-  end
-
-  describe "#get" do
-    it "return nil when no dependency was defined" do
-      container.get(:undefined).must_be_nil
-    end
-
-    it "returns a unique instance of the dependency when it was defined" do
-      dependency = container.get(Hash)
-      dependency.must_be_instance_of(Hash)
-      container.get(Hash).must_be_same_as(dependency)
-    end
-  end
-
-  describe "#fetch" do
-    it "returns a unique instance of the dependency when it was defined" do
-      dependency = container.fetch(Hash)
-      dependency.must_be_instance_of(Hash)
-      container.fetch(Hash).must_be_same_as(dependency)
-    end
-
-    it "throws an exception when dependency is not defined" do
+  describe '#set' do
+    it 'raises error when dependency is already defined' do
       begin
-        container.fetch("undefined")
+        container.share(:new_hash)
+        fail
+      rescue Nurse::DependencyContainer::DependencyAlreadyDefined => e
+        e.message.must_equal "Dependency 'new_hash' was already defined"
+      end
+    end
+  end
+
+  describe '#get' do
+    it 'returns the same instance when it was defined with #share' do
+      container.get(:shared).must_be_same_as(shared)
+      container.get(:shared).must_be_same_as(container.get(:shared))
+    end
+
+    it 'returns a different instance when it was defined with #set' do
+      container.get(:new_hash).wont_be_same_as(new_hash)
+      container.get(:new_hash).must_equal(new_hash)
+      container.get('new_hash').must_equal(new_hash)
+    end
+
+    it 'returns block if dependency is not defined and block is given' do
+      container.get(:undefined) { :foo }.must_equal :foo
+    end
+
+    it 'raises an exception when dependency is not defined' do
+      begin
+        container.get('undefined')
         fail
       rescue Nurse::DependencyContainer::UndefinedDependency => e
         e.message.must_equal "'undefined' was not defined"
       end
-    end
-
-    it "allows block as a fall back for the unexisting dependency" do
-      container.fetch("undefined") do |key|
-        "#{key} undefined"
-      end.must_equal "undefined undefined"
-
-      container.fetch("undefined") { "undefined" }.must_equal "undefined"
     end
   end
 end

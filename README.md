@@ -38,11 +38,11 @@ Or install it yourself as:
 ```ruby
 dependency_manager = Nurse::DependencyContainer.new
 
-dependency_manager.define(:connection) do |dependency_manager|
+dependency_manager.share(:connection) do |dependency_manager|
   MyConnection.new("mysql://root@localhost/my_db")
 end
 
-dependency_manager.define(UserRepository) do |dependency_manager|
+dependency_manager.share(UserRepository) do |dependency_manager|
   connection = dependency_manager.get(:connection)
   UserRepository.new(connection)
 end
@@ -52,7 +52,7 @@ Also, you can use the singleton instance. Use singleton if you do not have
 control over how classes, such as controllers, are created.
 
 ```ruby
-dependency_manager = Nurse.dependency_manager
+dependency_manager = Nurse.instance
 ```
 
 ### Fetching dependencies
