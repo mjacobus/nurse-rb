@@ -69,6 +69,34 @@ class UsersController < SomeBaseController
   end
 end
 ```
+
+```ruby
+class DatabaseConnectionFactory < Nurse::SharedServiceFactory
+  def create_service(dependencies)
+    DatabaseConnection.new(dependencies.get(:db_config))
+  end
+
+  def dependency_key
+    :db_connection
+  end
+end
+
+class UserRepositoryFactory < Nurse::ServiceFactory
+  def create_service(dependencies)
+    UserRepository.new(dependencies.get(:db_connection))
+  end
+
+  def dependency_key
+    :user_repository
+  end
+end
+
+dependency_manager.add_factory(DatabaseConnectionFactory.new)
+dependency_manager.add_factory(UserRepositoryFactory.new)
+```
+
+### Using factories
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
