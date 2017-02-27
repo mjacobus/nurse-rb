@@ -3,64 +3,65 @@ module Nurse
     class UndefinedDependency < RuntimeError; end
     class DependencyAlreadyDefined < RuntimeError; end
 
+    def initialize
+      @factories = {}
+      @shared_factories = {}
+      @instances = {}
+    end
+
     def share(dependency, &block)
       ensure_undefined(dependency)
-      definitions[to_key(dependency)] = block
+      shared_factories[to_key(dependency)] = block
       self
     end
 
-    def share!(dependency, &block)
-      undefine(dependency)
-      share(dependency, &block)
+    def set(dependency, &block)
+      ensure_undefined(dependency)
+      factories[to_key(dependency)] = block
+      self
     end
 
     def defined?(dependency)
-      definitions.key?(to_key(dependency))
+      key = to_key(dependency)
+      shared_factories.key?(key) || factories.key?(key)
     end
 
-    def get(dependency)
-      return nil unless self.defined?(dependency)
-
+    def get(dependency, &_block)
       key = to_key(dependency)
 
-      instances[key] = definitions[key].call(self) unless instances.key?(key)
+      if self.defined?(key)
+        return from_shared_factories(key) || from_factories(key)
+      end
 
-      instances[key]
-    end
+      return yield if block_given?
 
-    def fetch(dependency, &block)
-      return get(dependency) if self.defined?(dependency)
-      return block.call(dependency) if block_given?
       fail UndefinedDependency, "'#{dependency}' was not defined"
     end
 
-    private
+    protected
+
+    def from_shared_factories(key)
+      return unless shared_factories.key?(key)
+      instances[key] ||= shared_factories[key].call(self)
+    end
+
+    def from_factories(key)
+      factories[key].call(self) if factories.key?(key)
+    end
 
     def ensure_undefined(dependency)
-      if self.defined?(to_key(dependency))
-        fail DependencyAlreadyDefined.new(
-          "Dependency '#{dependency}' was already defined"
-        )
+      if self.defined?(dependency)
+        fail DependencyAlreadyDefined,
+             "Dependency '#{dependency}' was already defined"
       end
     end
 
-    def instances
-      @instances ||= {}
-    end
-
-    def definitions
-      @definitions ||= {}
-    end
-
     def to_key(object)
-      object.to_s.to_sym
+      object.to_s
     end
 
-    def undefine(dependency)
-      return unless self.defined?(dependency)
-      key = to_key(dependency)
-      definitions.delete(key)
-      instances.delete(key)
-    end
+    attr_reader :factories
+    attr_reader :instances
+    attr_reader :shared_factories
   end
 end

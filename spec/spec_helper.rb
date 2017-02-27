@@ -21,3 +21,7 @@ end
 
 require 'nurse'
 require 'minitest/autorun'
+require "minitest/reporters"
+
+ENV.delete("VIM")
+Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(:color => true)]
