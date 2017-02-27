@@ -1,4 +1,5 @@
 module Nurse
+  # The dependency container class
   class DependencyContainer
     class UndefinedDependency < RuntimeError; end
     class DependencyAlreadyDefined < RuntimeError; end
@@ -40,6 +41,10 @@ module Nurse
 
     protected
 
+    attr_reader :factories
+    attr_reader :instances
+    attr_reader :shared_factories
+
     def from_shared_factories(key)
       return unless shared_factories.key?(key)
       instances[key] ||= shared_factories[key].call(self)
@@ -50,18 +55,13 @@ module Nurse
     end
 
     def ensure_undefined(dependency)
-      if self.defined?(dependency)
-        fail DependencyAlreadyDefined,
-             "Dependency '#{dependency}' was already defined"
-      end
+      return unless self.defined?(dependency)
+      fail DependencyAlreadyDefined,
+           "Dependency '#{dependency}' was already defined"
     end
 
     def to_key(object)
       object.to_s
     end
-
-    attr_reader :factories
-    attr_reader :instances
-    attr_reader :shared_factories
   end
 end
