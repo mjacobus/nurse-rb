@@ -39,6 +39,10 @@ module Nurse
       fail UndefinedDependency, "'#{dependency}' was not defined"
     end
 
+    def add_factory(factory)
+      factory.attach_to(self)
+    end
+
     protected
 
     attr_reader :factories

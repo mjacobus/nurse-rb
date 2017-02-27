@@ -91,8 +91,8 @@ class UserRepositoryFactory < Nurse::ServiceFactory
   end
 end
 
-dependency_manager.append_factory(DatabaseConnectionFactory.new)
-dependency_manager.append_factory(UserRepositoryFactory.new)
+dependency_manager.add_factory(DatabaseConnectionFactory.new)
+dependency_manager.add_factory(UserRepositoryFactory.new)
 ```
 
 ### Using factories
