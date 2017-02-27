@@ -82,7 +82,7 @@ describe Nurse::DependencyContainer do
 
   describe "#get" do
     it "return nil when no dependency was defined" do
-      container.get(:undefined).must_equal nil
+      container.get(:undefined).must_be_nil
     end
 
     it "returns a unique instance of the dependency when it was defined" do
