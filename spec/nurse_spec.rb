@@ -5,11 +5,11 @@ describe Nurse do
     refute_nil ::Nurse::VERSION
   end
 
-  describe '.dependency_manager' do
+  describe '.instance' do
     it 'returns a singleton instance of DependencyContainer' do
-      container = Nurse.dependency_manager
+      container = Nurse.instance
       container.must_be_instance_of(Nurse::DependencyContainer)
-      Nurse.dependency_manager.must_be_same_as(container)
+      Nurse.instance.must_be_same_as(container)
     end
   end
 end
