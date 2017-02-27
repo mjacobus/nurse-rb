@@ -20,7 +20,7 @@ Package information
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'nurse'
+gem 'nurse-rb'
 ```
 
 And then execute:
@@ -29,7 +29,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install nurse
+    $ gem install nurse-rb
 
 ## Usage
 
