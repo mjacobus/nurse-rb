@@ -4,18 +4,18 @@ describe Nurse::DependencyContainer do
   let(:container) do
     container = Nurse::DependencyContainer.new
 
-    container.define(Hash) do
+    container.share(Hash) do
       Hash.new
     end
 
-    container.define(:definition) do
+    container.share(:definition) do
       :defined_object
     end
   end
 
-  describe "#define" do
-    it "defines dependencies" do
-      container.define(:foo) do
+  describe "#share" do
+    it "defines a shared dependency" do
+      container.share(:foo) do
         :bar
       end
 
@@ -23,11 +23,11 @@ describe Nurse::DependencyContainer do
     end
 
     it "passess the container as argument for the block" do
-      container.define(:hash) do |di|
+      container.share(:hash) do |di|
         { name: di.get(:name) }
       end
 
-      container.define :name do
+      container.share :name do
         "marcelo"
       end
 
@@ -36,7 +36,7 @@ describe Nurse::DependencyContainer do
 
     it "throws an exception if dependency was already defined" do
       begin
-        container.define(Hash)
+        container.share(Hash)
         fail
       rescue Nurse::DependencyContainer::DependencyAlreadyDefined => e
         e.message.must_equal "Dependency 'Hash' was already defined"
@@ -44,12 +44,12 @@ describe Nurse::DependencyContainer do
     end
   end
 
-  describe "#define!" do
+  describe "#share!" do
     it "overrites definition" do
-      container.define!(:dependency) { :bar }
+      container.share!(:dependency) { :bar }
       container.get(:dependency).must_equal :bar
 
-      container.define!(:dependency) do
+      container.share!(:dependency) do
         # { foo: di.get(:dependency) }
         :new_dependency
       end

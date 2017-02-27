@@ -3,15 +3,15 @@ module Nurse
     class UndefinedDependency < RuntimeError; end
     class DependencyAlreadyDefined < RuntimeError; end
 
-    def define(dependency, &block)
+    def share(dependency, &block)
       ensure_undefined(dependency)
       definitions[to_key(dependency)] = block
       self
     end
 
-    def define!(dependency, &block)
+    def share!(dependency, &block)
       undefine(dependency)
-      define(dependency, &block)
+      share(dependency, &block)
     end
 
     def defined?(dependency)
