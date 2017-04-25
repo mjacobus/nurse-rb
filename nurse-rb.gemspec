@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Marcelo Jacobus']
   spec.email         = ['marcelo.jacobus@gmail.com']
 
-  spec.summary       = 'Nurse, for your dependnecy injection'
-  spec.description   = 'Nurse, for your dependnecy injection. Dependency injection management'
+  spec.summary       = 'Nurse, for your dependency injection'
+  spec.description   = 'Nurse, for your dependency injection. Dependency injection container'
   spec.homepage      = 'https://github.com/mjacobus/nurse-rb'
   spec.license       = 'MIT'
 
