@@ -73,23 +73,20 @@ end
 ### Using factories
 
 ```ruby
-class DatabaseConnectionFactory < Nurse::SharedServiceFactory
+class DatabaseConnectionFactory < Nurse::ServiceFactory
+  share true
+  key :db_connection
+
   def create_service(dependencies)
     DatabaseConnection.new(dependencies.get(:db_config))
-  end
-
-  def dependency_key
-    :db_connection
   end
 end
 
 class UserRepositoryFactory < Nurse::ServiceFactory
+  key :user_repository
+
   def create_service(dependencies)
     UserRepository.new(dependencies.get(:db_connection))
-  end
-
-  def dependency_key
-    :user_repository
   end
 end
 

@@ -5,12 +5,10 @@ describe Nurse::ServiceFactory do
 
   let(:factory) do
     Class.new(Nurse::SharedServiceFactory) do
+      key :the_key
+
       def create_service(dependency_manager)
         Array.new([dependency_manager.get(:config)])
-      end
-
-      def dependency_key
-        :the_key
       end
     end
   end
@@ -31,5 +29,9 @@ describe Nurse::ServiceFactory do
 
   it 'extends ServiceFactory' do
     factory.new.is_a?(Nurse::ServiceFactory).must_equal true
+  end
+
+  it 'is not shared' do
+    factory.new.shared?.must_equal true
   end
 end
