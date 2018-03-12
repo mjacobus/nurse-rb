@@ -1,8 +1,14 @@
 module Nurse
   class SharedServiceFactory < ServiceFactory
-    def attach_to(dependency_manager)
-      dependency_manager.share(dependency_key) do |di|
-        create_service(di)
+    def shared?
+      true
+    end
+
+    class << self
+      private
+
+      def share(_shared)
+        raise 'You cannot change the shared state of a shared service factory. Extend Nurse::ServiceFactory instead'
       end
     end
   end
