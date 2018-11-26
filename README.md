@@ -6,13 +6,10 @@ Code quality
 
 [![Build Status](https://travis-ci.org/mjacobus/nurse-rb.svg)](https://travis-ci.org/mjacobus/nurse-rb)
 [![Coverage Status](https://coveralls.io/repos/github/mjacobus/nurse-rb/badge.svg?branch=master)](https://coveralls.io/github/mjacobus/nurse-rb?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/mjacobus/nurse-rb/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/mjacobus/nurse-rb/?branch=master)
 [![Code Climate](https://codeclimate.com/github/mjacobus/nurse-rb/badges/gpa.svg)](https://codeclimate.com/github/mjacobus/nurse-rb)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mjacobus/nurse-rb/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mjacobus/nurse-rb/?branch=master)
 
 Package information
 
-[![Dependency Status](https://gemnasium.com/mjacobus/nurse-rb.svg)](https://gemnasium.com/mjacobus/nurse-rb)
 [![Gem Version](https://badge.fury.io/rb/nurse-rb.svg)](https://badge.fury.io/rb/nurse-rb)
 
 ## Installation
