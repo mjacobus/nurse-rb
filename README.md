@@ -1,5 +1,7 @@
 # Nurse
 
+**Note:** If `Nurse` constant is used in your project you can use [Koine::Di](https://github.com/mjacobus/koine-di) instead.
+
 Nurse, for your dependency injection
 
 Code quality
